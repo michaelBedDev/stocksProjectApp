@@ -1,0 +1,88 @@
+{% extends "base.html" %}{% block content %}
+<br />
+<h1>Investments</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Ticker</th>
+            <th scope="col">Date</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Buy Price</th>
+            <th scope="col">Total Investment</th>
+            <th scope="col">Current Value</th>
+            <th scope="col">Profit/Loss</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for investment in investments %}
+        <tr>
+            <td>
+                <a href="{% url 'detail' investment.ticker_name %}"
+                    >{{ investment.ticker_name }}</a
+                >
+            </td>
+            <td>{{ investment.created_at|date:"d-m-Y" }}</td>
+            <td>{{ investment.stocks_amount }}</td>
+            <td>{{ investment.price_at_purchase|floatformat:2 }}$</td>
+            <td>{{ investment.total_investment|floatformat:2 }}$</td>
+            <td>current_value</td>
+            <td>profit_loss</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'stocks_list' %}" class="btn btn-primary">See Corporations List</a>
+
+<br />
+<hr />
+<form action="{% url 'portfolio' %}" method="post">
+    {% csrf_token %}
+    <div class="mb-3 mt-3">
+        <label for="ticker_name" class="form-label">Ticker:</label>
+        <input
+            type="text"
+            class="form-control"
+            id="ticker_name"
+            placeholder="Enter the ticker symbol"
+            name="ticker_name"
+            required
+            aria-label="Ticker symbol" />
+    </div>
+
+    <div class="mb-3">
+        <label for="stocks_amount" class="form-label">Stocks Amount:</label>
+
+        <input
+            type="number"
+            class="form-control"
+            id="stocks_amount"
+            placeholder="Enter the amount of stocks"
+            name="stocks_amount"
+            min="1"
+            required
+            aria-label="Stocks amount" />
+    </div>
+
+    <div class="mb-3">
+        <label for="price_at_purchase" class="form-label">Price at Purchase:</label>
+        <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input
+                type="number"
+                class="form-control"
+                id="price_at_purchase"
+                placeholder="Enter the price at purchase"
+                name="price_at_purchase"
+                step="0.01"
+                min="0"
+                required
+                aria-label="Price at purchase" />
+            <span class="input-group-text">.00</span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add new investment</button>
+</form>
+
+{% endblock %}
